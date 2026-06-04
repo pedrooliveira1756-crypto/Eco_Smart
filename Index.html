@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eco Smart — Monitoramento Inteligente de Gases</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      :root {
+        --blue: #0ea5e9;
+        --blue-dark: #0369a1;
+        --blue-light: #e0f2fe;
+        --green: #10b981;
+        --green-dark: #047857;
+        --green-light: #d1fae5;
+        --glass: rgba(255, 255, 255, 0.55);
+        --glass-border: rgba(255, 255, 255, 0.7);
+        --text: #063b3f;
+        --text2: #164e55;
+        --bg1: #d9ffe0;
+        --bg2: #8ee7ff;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg1) 0%,
+          #b2f5d8 40%,
+          var(--bg2) 100%
+        );
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* HEADER */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 0 6%;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--glass-border);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
+      .logo {
+        font-size: 24px;
+        font-weight: 900;
+        color: var(--blue-dark);
+        letter-spacing: -0.5px;
+      }
+      .logo span {
+        color: var(--green);
+      }
+      nav {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      nav a {
+        text-decoration: none;
+        color: var(--text2);
+        font-weight: 600;
+        font-size: 14px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        transition: all 0.25s;
+      }
+      nav a:hover {
+        background: rgba(14, 165, 233, 0.12);
+        color: var(--blue-dark);
+      }
+      .btn-nav {
+        background: var(--blue) !important;
+        color: #fff !important;
+        padding: 8px 20px !important;
+        border-radius: 20px;
+      }
+      .btn-nav:hover {
+        background: var(--blue-dark) !important;
+        transform: translateY(-1px);
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 8px;
+        background: none;
+        border: none;
+      }
+      .hamburger span {
+        width: 22px;
+        height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.3s;
+        display: block;
+      }
+      .hamburger.open span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+      .mobile-nav {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px 6% 20px;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--glass-border);
+      }
+      .mobile-nav a {
+        text-decoration: none;
+        color: var(--text2);
+        font-weight: 600;
+        font-size: 15px;
+        padding: 10px 16px;
+        border-radius: 12px;
+        transition: background 0.2s;
+      }
+      .mobile-nav a:hover {
+        background: rgba(14, 165, 233, 0.1);
+      }
+      .mobile-nav.open {
+        display: flex;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 88vh;
+        padding: 20px 2%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .hero-text {
+        max-width: 580px;
+        animation: fadeUp 0.8s ease both;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 6px 16px;
+        border-radius: 30px;
+        color: var(--green-dark);
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+      .badge::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        display: inline-block;
+        animation: pulse 1.5s infinite;
+      }
+      .hero-text h1 {
+        font-size: clamp(32px, 5.5vw, 58px);
+        color: #065f46;
+        margin-bottom: 18px;
+        line-height: 1.1;
+        letter-spacing: -1px;
+      }
+      .hero-text h1 span {
+        color: var(--blue-dark);
+      }
+      .hero-text p {
+        font-size: 17px;
+        line-height: 1.75;
+        color: var(--text2);
+      }
+      .buttons {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 13px 26px;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-block;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+      }
+      .btn.outline {
+        background: transparent;
+        border: 2px solid var(--green);
+        color: var(--green-dark);
+      }
+      .btn.outline:hover {
+        background: var(--green);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      }
+      .hero-card {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--glass-border);
+        padding: 32px;
+        border-radius: 28px;
+        width: 350px;
+        flex-shrink: 0;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+        animation: fadeUp 0.8s 0.2s ease both;
+      }
+      .hero-card h3 {
+        color: var(--blue-dark);
+        margin-bottom: 6px;
+        font-size: 16px;
+      }
+      .hero-card .sub {
+        font-size: 12px;
+        color: #64748b;
+        margin-bottom: 22px;
+      }
+      .status-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.75);
+        margin-bottom: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        transition: transform 0.2s;
+      }
+      .status-row:hover {
+        transform: scale(1.01);
+      }
+      .status-row .label {
+        font-size: 13px;
+        color: var(--text2);
+      }
+      .badge-ok {
+        font-size: 12px;
+        font-weight: 700;
+        color: #059669;
+        background: #d1fae5;
+        padding: 4px 10px;
+        border-radius: 10px;
+      }
+      .badge-warn {
+        font-size: 12px;
+        font-weight: 700;
+        color: #d97706;
+        background: #fef3c7;
+        padding: 4px 10px;
+        border-radius: 10px;
+      }
+      .card-footer {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .card-footer span {
+        font-size: 12px;
+        color: #64748b;
+      }
+      .live-dot {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #059669;
+      }
+      .live-dot::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: pulse 1.2s infinite;
+      }
+
+      /* SECTIONS */
+      section {
+        padding: 80px 6%;
+      }
+      .section-label {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--blue);
+        background: var(--blue-light);
+        padding: 5px 14px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+      }
+      .section-title {
+        font-size: clamp(26px, 3.5vw, 40px);
+        color: #065f46;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
+      }
+      .section-desc {
+        max-width: 640px;
+        color: var(--text2);
+        line-height: 1.7;
+        font-size: 16px;
+      }
+      .section-head {
+        margin-bottom: 48px;
+      }
+
+      /* DASHBOARD */
+      #dashboard {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .dash-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+      }
+      .gas-card {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid var(--glass-border);
+        border-radius: 22px;
+        padding: 24px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        transition: transform 0.3s;
+      }
+      .gas-card:hover {
+        transform: translateY(-5px);
+      }
+      .gas-icon {
+        font-size: 32px;
+        margin-bottom: 12px;
+      }
+      .gas-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+      .gas-val {
+        font-size: 28px;
+        font-weight: 900;
+        margin-bottom: 6px;
+      }
+      .gas-unit {
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 600;
+      }
+      .progress-wrap {
+        margin-top: 14px;
+      }
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #64748b;
+        margin-bottom: 5px;
+      }
+      .progress-bg {
+        height: 6px;
+        background: rgba(0, 0, 0, 0.07);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .status-ok .gas-val {
+        color: #059669;
+      }
+      .status-ok .progress-bar {
+        background: linear-gradient(90deg, #6ee7b7, #10b981);
+      }
+      .status-warn .gas-val {
+        color: #d97706;
+      }
+      .status-warn .progress-bar {
+        background: linear-gradient(90deg, #fcd34d, #f59e0b);
+      }
+      .status-danger .gas-val {
+        color: #dc2626;
+      }
+      .status-danger .progress-bar {
+        background: linear-gradient(90deg, #fca5a5, #ef4444);
+      }
+      .dash-alert {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: rgba(209, 250, 229, 0.8);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 16px;
+        padding: 16px 22px;
+        font-size: 14px;
+        color: #065f46;
+        font-weight: 600;
+      }
+      .alert-icon {
+        font-size: 22px;
+      }
+
+      /* HOW IT WORKS */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+        position: relative;
+      }
+      .step {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+        transition: transform 0.3s;
+        text-align: center;
+      }
+      .step:hover {
+        transform: translateY(-6px);
+      }
+      .step-num {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        font-weight: 900;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+      }
+      .step-icon {
+        font-size: 36px;
+        margin-bottom: 14px;
+      }
+      .step h3 {
+        font-size: 16px;
+        color: var(--blue-dark);
+        margin-bottom: 10px;
+      }
+      .step p {
+        font-size: 14px;
+        color: var(--text2);
+        line-height: 1.65;
+      }
+
+      /* FEATURES */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 22px;
+      }
+      .feature {
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid var(--glass-border);
+        padding: 28px;
+        border-radius: 22px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+        transition: all 0.3s;
+      }
+      .feature:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      }
+      .f-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+        display: block;
+      }
+      .feature h3 {
+        color: var(--blue-dark);
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+      .feature p {
+        font-size: 14px;
+        color: var(--text2);
+        line-height: 1.6;
+      }
+
+      /* TECHNOLOGIES */
+      #tecnologias {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 18px;
+      }
+      .tech-card {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 22px 18px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s;
+      }
+      .tech-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.85);
+      }
+      .tech-logo {
+        font-size: 36px;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .tech-card h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--blue-dark);
+        margin-bottom: 4px;
+      }
+      .tech-card p {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.5;
+      }
+
+      /* TEAM */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 24px;
+      }
+      .team-card {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 28px 22px;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s;
+      }
+      .team-card:hover {
+        transform: translateY(-6px);
+      }
+      .avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 900;
+        color: #fff;
+        margin: 0 auto 16px;
+      }
+      .av-blue {
+        background: linear-gradient(135deg, #38bdf8, #0284c7);
+      }
+      .av-green {
+        background: linear-gradient(135deg, #34d399, #059669);
+      }
+      .av-teal {
+        background: linear-gradient(135deg, #22d3ee, #0e7490);
+      }
+      .av-purple {
+        background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      }
+      .team-card h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #065f46;
+        margin-bottom: 4px;
+      }
+      .team-card .role {
+        font-size: 13px;
+        color: var(--blue);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .team-card p {
+        font-size: 13px;
+        color: #64748b;
+        line-height: 1.55;
+      }
+
+      /* CONTACT */
+      #contato {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 40px;
+        align-items: start;
+      }
+      .contact-info h3 {
+        font-size: 20px;
+        color: #065f46;
+        margin-bottom: 14px;
+      }
+      .contact-info p {
+        font-size: 15px;
+        color: var(--text2);
+        line-height: 1.7;
+        margin-bottom: 24px;
+      }
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        color: var(--text2);
+      }
+      .c-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .form-card {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+      }
+      .form-row {
+        margin-bottom: 18px;
+      }
+      .form-row label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 7px;
+      }
+      .form-row input,
+      .form-row textarea,
+      .form-row select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1.5px solid rgba(0, 0, 0, 0.12);
+        border-radius: 12px;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.85);
+        color: var(--text);
+        transition: border-color 0.2s;
+        outline: none;
+        font-family: inherit;
+      }
+      .form-row input:focus,
+      .form-row textarea:focus,
+      .form-row select:focus {
+        border-color: var(--blue);
+        background: #fff;
+      }
+      .form-row textarea {
+        resize: vertical;
+        min-height: 110px;
+      }
+      .form-row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .btn-submit:hover {
+        background: var(--blue-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+      }
+      .form-success {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        color: #059669;
+        font-weight: 700;
+        font-size: 16px;
+      }
+
+      /* FOOTER */
+      footer {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(14px);
+        border-top: 1px solid var(--glass-border);
+        padding: 40px 6% 28px;
+      }
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 28px;
+      }
+      .footer-logo {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--blue-dark);
+        margin-bottom: 12px;
+      }
+      .footer-logo span {
+        color: var(--green);
+      }
+      .footer-desc {
+        font-size: 14px;
+        color: #64748b;
+        line-height: 1.65;
+      }
+      .footer-col h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 14px;
+      }
+      .footer-col a {
+        display: block;
+        font-size: 14px;
+        color: #64748b;
+        text-decoration: none;
+        margin-bottom: 8px;
+        transition: color 0.2s;
+      }
+      .footer-col a:hover {
+        color: var(--blue);
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #94a3b8;
+      }
+
+      /* ANIMATIONS */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.2);
+        }
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: all 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+          padding: 55px 6%;
+        }
+        .buttons {
+          justify-content: center;
+        }
+        .hero-card {
+          width: 100%;
+          max-width: 420px;
+        }
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 680px) {
+        nav {
+          display: none;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .hero {
+          padding: 45px 5%;
+        }
+        .section-title {
+          font-size: 26px;
+        }
+        .form-row2 {
+          grid-template-columns: 1fr;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+      @media (max-width: 400px) {
+        .hero-card {
+          padding: 22px;
+        }
+        section {
+          padding: 60px 5%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="logo">Eco <span>Smart</span></div>
+        <nav>
+          <a href="#inicio">Início</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#como-funciona">Como Funciona</a>
+          <a href="#tecnologias">Tecnologias</a>
+          <a href="#equipe">Equipe</a>
+          <a href="#contato" class="btn-nav btn">Contato</a>
+        </nav>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <nav class="mobile-nav" id="mobile-nav">
+      <a href="#inicio" onclick="closeMobile()">Início</a>
+      <a href="#dashboard" onclick="closeMobile()">Dashboard</a>
+      <a href="#como-funciona" onclick="closeMobile()">Como Funciona</a>
+      <a href="#tecnologias" onclick="closeMobile()">Tecnologias</a>
+      <a href="#equipe" onclick="closeMobile()">Equipe</a>
+      <a href="#contato" onclick="closeMobile()">Contato</a>
+    </nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="inicio">
+        <div class="hero-text">
+          <span class="badge">Projeto Arduino 2026</span>
+          <h1>Monitoramento<br /><span>Inteligente</span><br />de Gases</h1>
+          <p>
+            O Eco Smart é um sistema embarcado com Arduino capaz de detectar e
+            monitorar gases no ambiente em tempo real, garantindo segurança e
+            cuidado com o meio ambiente.
+          </p>
+          <div class="buttons">
+            <a href="#como-funciona" class="btn">Ver Projeto</a>
+            <a href="#dashboard" class="btn outline">Dashboard ao Vivo</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD -->
+      <section id="dashboard">
+        <div class="section-head reveal">
+          <span class="section-label">Dashboard</span>
+          <h2 class="section-title">Leituras dos Sensores</h2>
+          <p class="section-desc">
+            Visualize os valores simulados dos gases em tempo real com
+            indicadores de segurança e barras de nível.
+          </p>
+        </div>
+        <div class="dash-grid" id="dash-grid">
+          <!-- preenchido via JS -->
+        </div>
+        <div class="dash-alert reveal" id="dash-alert">
+          <span class="alert-icon">✅</span>
+          <span
+            >Todos os sensores dentro dos limites seguros. Ambiente monitorado e
+            estável.</span
+          >
+        </div>
+      </section>
+
+      <!-- COMO FUNCIONA -->
+      <section id="como-funciona">
+        <div class="section-head reveal">
+          <span class="section-label">Como Funciona</span>
+          <h2 class="section-title">Processo em 4 etapas</h2>
+          <p class="section-desc">
+            Entenda o fluxo completo do sistema Eco Smart, da coleta de dados
+            até o alerta de segurança.
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-num">1</div>
+            <div class="step-icon">🌫️</div>
+            <h3>Detecção</h3>
+            <p>
+              O sensor MQ-2 capta as concentrações de gases presentes no ar,
+              como CO, metano e fumaça, com alta sensibilidade.
+            </p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">2</div>
+            <div class="step-icon">🔌</div>
+            <h3>Processamento</h3>
+            <p>
+              O Arduino Uno lê os sinais analógicos do sensor, converte em
+              valores PPM e processa os dados em tempo real.
+            </p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">3</div>
+            <div class="step-icon">📊</div>
+            <h3>Análise</h3>
+            <p>
+              O sistema compara os valores com limites de segurança
+              pré-definidos e classifica o ambiente como seguro, alerta ou
+              perigo.
+            </p>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">4</div>
+            <div class="step-icon">🚨</div>
+            <h3>Alerta</h3>
+            <p>
+              Em caso de risco, o buzzer soa, o LED vermelho acende e o display
+              exibe o tipo de gás detectado e o nível de risco.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section id="sensores" style="background: rgba(255, 255, 255, 0.2)">
+        <div class="section-head reveal">
+          <span class="section-label">Funcionalidades</span>
+          <h2 class="section-title">Recursos do Sistema</h2>
+          <p class="section-desc">
+            Principais funcionalidades pensadas para tornar o Eco Smart uma
+            solução inteligente, segura e acessível.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature reveal">
+            <span class="f-icon">🌫️</span>
+            <h3>Sensor de Gás MQ-2</h3>
+            <p>
+              Detecta múltiplos gases incluindo CO, metano, fumaça e GLP com
+              alta precisão e resposta rápida.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <span class="f-icon">📟</span>
+            <h3>Display LCD</h3>
+            <p>
+              Exibe os valores de leitura, tipo de gás e status do ambiente em
+              tempo real de forma clara e direta.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <span class="f-icon">🚨</span>
+            <h3>Sistema de Alerta</h3>
+            <p>
+              Alarme sonoro com buzzer e visual com LED bicolor: verde para
+              seguro e vermelho para risco detectado.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <span class="f-icon">📡</span>
+            <h3>Comunicação Serial</h3>
+            <p>
+              Transmite dados via porta serial para monitoramento em computador
+              com logs e histórico de leituras.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <span class="f-icon">🔋</span>
+            <h3>Baixo Consumo</h3>
+            <p>
+              Projetado para funcionar com bateria ou USB, tornando-o portátil e
+              ideal para uso em campo.
+            </p>
+          </div>
+          <div class="feature reveal">
+            <span class="f-icon">🌱</span>
+            <h3>Eco Sustentável</h3>
+            <p>
+              Contribui para o monitoramento ambiental e pode ser integrado em
+              projetos de smart cities e IoT.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECHNOLOGIES -->
+      <section id="tecnologias">
+        <div class="section-head reveal">
+          <span class="section-label">Tecnologias</span>
+          <h2 class="section-title">Stack do Projeto</h2>
+          <p class="section-desc">
+            Componentes e ferramentas utilizados para desenvolver o Eco Smart do
+            hardware ao software.
+          </p>
+        </div>
+        <div class="tech-grid">
+          <div class="tech-card reveal">
+            <span class="tech-logo">⚡</span>
+            <h4>Arduino Uno</h4>
+            <p>Microcontrolador principal do projeto</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">🌫️</span>
+            <h4>Sensor MQ-2</h4>
+            <p>Detecção de gases inflamáveis e fumaça</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">🔔</span>
+            <h4>Buzzer</h4>
+            <p>Alarme sonoro para situações de risco</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">💡</span>
+            <h4>LED RGB</h4>
+            <p>Indicação visual do status do ambiente</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">🖥️</span>
+            <h4>Arduino IDE</h4>
+            <p>Ambiente de desenvolvimento e programação</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">🔧</span>
+            <h4>Fritzing</h4>
+            <p>Diagrama e simulação dos circuitos</p>
+          </div>
+          <div class="tech-card reveal">
+            <span class="tech-logo">🌐</span>
+            <h4>HTML/CSS/JS</h4>
+            <p>Interface web de visualização dos dados</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEAM -->
+      <section id="equipe" style="background: rgba(255, 255, 255, 0.2)">
+        <div class="section-head reveal">
+          <span class="section-label">Equipe</span>
+          <h2 class="section-title">Quem fez o Eco Smart</h2>
+          <p class="section-desc">
+            Estudantes apaixonados por tecnologia e sustentabilidade que
+            desenvolveram esta solução para a feira tecnológica.
+          </p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card reveal">
+            <div class="avatar av-blue">A</div>
+            <h4>Ana Souza</h4>
+            <div class="role">Hardware & Circuitos</div>
+            <p>
+              Responsável pela montagem do circuito, calibração dos sensores e
+              integração dos componentes eletrônicos.
+            </p>
+          </div>
+          <div class="team-card reveal">
+            <div class="avatar av-green">C</div>
+            <h4>Carlos Lima</h4>
+            <div class="role">Programação Arduino</div>
+            <p>
+              Desenvolveu o código em C++ para leitura dos sensores, lógica de
+              alertas e comunicação serial.
+            </p>
+          </div>
+          <div class="team-card reveal">
+            <div class="avatar av-teal">M</div>
+            <h4>Mariana Costa</h4>
+            <div class="role">UX & Interface Web</div>
+            <p>
+              Criou o design da interface web, dashboard e apresentação visual
+              do projeto para a feira.
+            </p>
+          </div>
+          <div class="team-card reveal">
+            <div class="avatar av-purple">P</div>
+            <h4>Pedro Nunes</h4>
+            <div class="role">Pesquisa & Documentação</div>
+            <p>
+              Coordenou a pesquisa técnica, revisão dos limites de segurança dos
+              gases e documentação do projeto.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">Eco <span>Smart</span></div>
+          <p class="footer-desc">
+            Sistema de monitoramento inteligente de gases com Arduino.
+            Desenvolvido para a Feira Tecnológica 2026 com foco em segurança e
+            sustentabilidade.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Navegação</h4>
+          <a href="#inicio">Início</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#como-funciona">Como Funciona</a>
+          <a href="#sensores">Funcionalidades</a>
+          <a href="#tecnologias">Tecnologias</a>
+        </div>
+        <div class="footer-col">
+          <h4>Projeto</h4>
+          <a href="#equipe">Nossa Equipe</a>
+          <a href="#contato">Contato</a>
+          <a href="#">Repositório GitHub</a>
+          <a href="#">Documentação</a>
+          <a href="#">Esquemático</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Eco Smart — Todos os direitos reservados</span>
+        <span>Projeto Arduino · Feira Tecnológica 2026 · Fortaleza, CE</span>
+      </div>
+    </footer>
+
+    <script>
+      // HAMBURGER
+      const ham = document.getElementById("hamburger");
+      const mobileNav = document.getElementById("mobile-nav");
+      ham.addEventListener("click", () => {
+        ham.classList.toggle("open");
+        mobileNav.classList.toggle("open");
+      });
+      function closeMobile() {
+        ham.classList.remove("open");
+        mobileNav.classList.remove("open");
+      }
+
+      // GAS DATA
+      const gases = [
+        {
+          name: "CO₂",
+          icon: "🌫️",
+          val: 412,
+          unit: "ppm",
+          limit: 1000,
+          status: "ok",
+          label: "Dióxido de Carbono",
+        },
+        {
+          name: "CO",
+          icon: "💨",
+          val: 8,
+          unit: "ppm",
+          limit: 50,
+          status: "ok",
+          label: "Monóxido de Carbono",
+        },
+        {
+          name: "CH₄",
+          icon: "🔥",
+          val: 180,
+          unit: "ppm",
+          limit: 500,
+          status: "warn",
+          label: "Gás Metano",
+        },
+        {
+          name: "GLP",
+          icon: "🛢️",
+          val: 22,
+          unit: "ppm",
+          limit: 200,
+          status: "ok",
+          label: "Gás de Cozinha",
+        },
+        {
+          name: "NH₃",
+          icon: "⚗️",
+          val: 14,
+          unit: "ppm",
+          limit: 25,
+          status: "warn",
+          label: "Amônia",
+        },
+        {
+          name: "H₂S",
+          icon: "💀",
+          val: 3,
+          unit: "ppm",
+          limit: 10,
+          status: "ok",
+          label: "Gás Sulfídrico",
+        },
+      ];
+
+      function buildDash() {
+        const grid = document.getElementById("dash-grid");
+        grid.innerHTML = "";
+        gases.forEach((g) => {
+          const pct = Math.min(100, Math.round((g.val / g.limit) * 100));
+          const cls =
+            pct > 80 ? "status-danger" : pct > 55 ? "status-warn" : "status-ok";
+          const card = document.createElement("div");
+          card.className = "gas-card reveal " + cls;
+          card.innerHTML = `
+      <div class="gas-icon">${g.icon}</div>
+      <div class="gas-name">${g.label}</div>
+      <div><span class="gas-val" id="val-${g.name}">${g.val}</span><span class="gas-unit"> ${g.unit}</span></div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Nível atual</span><span>${pct}% do limite</span></div>
+        <div class="progress-bg"><div class="progress-bar" style="width:0%" id="bar-${g.name}"></div></div>
+      </div>`;
+          grid.appendChild(card);
+          setTimeout(() => {
+            document.getElementById("bar-" + g.name).style.width = pct + "%";
+          }, 300);
+        });
+      }
+      buildDash();
+
+      // Simulate live values
+      setInterval(() => {
+        gases.forEach((g) => {
+          const delta = (Math.random() - 0.48) * (g.limit * 0.04);
+          g.val = Math.max(1, Math.round(g.val + delta));
+          const pct = Math.min(100, Math.round((g.val / g.limit) * 100));
+          const valEl = document.getElementById("val-" + g.name);
+          const barEl = document.getElementById("bar-" + g.name);
+          if (valEl) valEl.textContent = g.val;
+          if (barEl) barEl.style.width = pct + "%";
+        });
+        const anyDanger = gases.some((g) => g.val / g.limit > 0.8);
+        const alert = document.getElementById("dash-alert");
+        if (anyDanger) {
+          alert.style.background = "rgba(254,226,226,0.8)";
+          alert.style.borderColor = "rgba(239,68,68,0.3)";
+          alert.style.color = "#991b1b";
+          alert.innerHTML =
+            '<span class="alert-icon">⚠️</span><span>Atenção! Um ou mais sensores estão próximos do limite de segurança. Verifique o ambiente.</span>';
+        } else {
+          alert.style.background = "rgba(209,250,229,0.8)";
+          alert.style.borderColor = "rgba(16,185,129,0.3)";
+          alert.style.color = "#065f46";
+          alert.innerHTML =
+            '<span class="alert-icon">✅</span><span>Todos os sensores dentro dos limites seguros. Ambiente monitorado e estável.</span>';
+        }
+      }, 2500);
+
+      // SCROLL REVEAL
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      // CONTACT FORM
+      function submitForm(e) {
+        e.preventDefault();
+        document.getElementById("contact-form").style.display = "none";
+        const s = document.getElementById("form-success");
+        s.style.display = "block";
+      }
+    </script>
+  </body>
+</html>

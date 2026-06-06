@@ -40,8 +40,38 @@
           #b2f5d8 40%,
           var(--bg2) 100%
         );
+        background-size: 180% 180%;
         color: var(--text);
         min-height: 100vh;
+        overflow-x: hidden;
+        animation: bgFlow 14s ease-in-out infinite;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        filter: blur(45px);
+        opacity: 0.28;
+        z-index: -1;
+        pointer-events: none;
+        animation: floatBlob 12s ease-in-out infinite;
+      }
+
+      body::before {
+        top: 90px;
+        left: -120px;
+        background: var(--green);
+      }
+
+      body::after {
+        right: -120px;
+        bottom: 80px;
+        background: var(--blue);
+        animation-delay: -5s;
       }
 
       /* HEADER */
@@ -82,11 +112,16 @@
         font-size: 14px;
         padding: 8px 14px;
         border-radius: 20px;
-        transition: all 0.25s;
+        transition:
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          background 0.35s,
+          color 0.35s,
+          box-shadow 0.35s;
       }
       nav a:hover {
         background: rgba(14, 165, 233, 0.12);
         color: var(--blue-dark);
+        transform: translateY(-2px);
       }
       .btn-nav {
         background: var(--blue) !important;
@@ -112,7 +147,11 @@
         height: 2px;
         background: var(--text);
         border-radius: 2px;
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
         display: block;
       }
       .hamburger.open span:nth-child(1) {
@@ -140,7 +179,9 @@
         font-size: 15px;
         padding: 10px 16px;
         border-radius: 12px;
-        transition: background 0.2s;
+        transition:
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          background 0.35s;
       }
       .mobile-nav a:hover {
         background: rgba(14, 165, 233, 0.1);
@@ -152,7 +193,7 @@
       /* HERO */
       .hero {
         min-height: 70vh;
-        padding: 20px 2%;
+        padding: 20px 7%;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -214,7 +255,11 @@
         font-size: 14px;
         cursor: pointer;
         text-decoration: none;
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
         display: inline-block;
       }
       .btn:hover {
@@ -346,6 +391,470 @@
         margin-bottom: 48px;
       }
 
+      /* SIMULAÇÃO INTERATIVA */
+      #simulacao {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .simulation-layout {
+        display: grid;
+        grid-template-columns: 0.9fr 1.15fr;
+        gap: 34px;
+        align-items: stretch;
+      }
+
+      .simulation-panel,
+      .simulation-stage {
+        background: rgba(255, 255, 255, 0.62);
+        border: 1px solid var(--glass-border);
+        border-radius: 28px;
+        box-shadow: 0 14px 38px rgba(14, 165, 233, 0.14);
+        backdrop-filter: blur(14px);
+      }
+
+      .simulation-panel {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .level-card {
+        padding: 22px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+        margin-bottom: 18px;
+      }
+
+      .level-label {
+        font-size: 12px;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .level-name {
+        font-size: 34px;
+        font-weight: 900;
+        color: var(--green);
+        line-height: 1;
+        transition: 0.3s;
+      }
+
+      .meter {
+        width: 100%;
+        height: 13px;
+        background: rgba(224, 242, 254, 0.9);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 18px;
+      }
+
+      .meter-fill {
+        width: 16%;
+        height: 100%;
+        background: var(--green);
+        border-radius: inherit;
+        transition:
+          width 0.35s ease,
+          background 0.35s ease;
+      }
+
+      .simulation-status {
+        padding: 17px 19px;
+        border-radius: 18px;
+        background: var(--green-light);
+        color: var(--green-dark);
+        border-left: 6px solid var(--green);
+        font-weight: 800;
+        line-height: 1.5;
+        transition: 0.3s;
+      }
+
+      .simulation-status.attention {
+        background: #fef3c7;
+        color: #92400e;
+        border-left-color: #f59e0b;
+      }
+
+      .simulation-status.danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left-color: #ef4444;
+        animation: simShake 0.35s ease;
+      }
+
+      .risk-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .risk-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--text2);
+        background: rgba(255, 255, 255, 0.55);
+        padding: 11px 13px;
+        border-radius: 16px;
+      }
+
+      .risk-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .risk-dot.safe {
+        background: var(--green);
+        box-shadow: 0 0 14px rgba(16, 185, 129, 0.7);
+      }
+      .risk-dot.attention {
+        background: #f59e0b;
+        box-shadow: 0 0 14px rgba(245, 158, 11, 0.7);
+      }
+      .risk-dot.danger {
+        background: #ef4444;
+        box-shadow: 0 0 14px rgba(239, 68, 68, 0.7);
+      }
+
+      .simulation-stage {
+        position: relative;
+        min-height: 470px;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 20% 18%,
+            rgba(255, 255, 255, 0.95),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 70% 75%,
+            rgba(16, 185, 129, 0.18),
+            transparent 36%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(236, 255, 251, 0.95),
+            rgba(214, 245, 255, 0.95)
+          );
+      }
+
+      .ambient-alert {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: 0.35s ease;
+      }
+
+      .ambient-alert.attention {
+        opacity: 1;
+        background: radial-gradient(
+          circle,
+          rgba(245, 158, 11, 0.23),
+          transparent 66%
+        );
+      }
+
+      .ambient-alert.danger {
+        opacity: 1;
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.27),
+          transparent 63%
+        );
+        animation: simPulseBg 0.55s infinite alternate;
+      }
+
+      .eco-sensor {
+        position: absolute;
+        right: 62px;
+        top: 50%;
+        width: 166px;
+        height: 218px;
+        transform: translateY(-50%);
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 3px solid #7dd3fc;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 4;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .eco-sensor::before {
+        content: "";
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          white 20%,
+          #e0f2fe 52%,
+          #7dd3fc 100%
+        );
+        border: 4px solid var(--blue-dark);
+        margin-bottom: 18px;
+      }
+
+      .eco-sensor.attention {
+        border-color: #f59e0b;
+        box-shadow:
+          0 0 26px rgba(245, 158, 11, 0.38),
+          0 18px 42px rgba(0, 0, 0, 0.16);
+      }
+
+      .eco-sensor.danger {
+        border-color: #ef4444;
+        box-shadow:
+          0 0 32px rgba(239, 68, 68, 0.45),
+          0 20px 55px rgba(0, 0, 0, 0.2);
+        animation: sensorDanger 0.35s infinite alternate;
+      }
+
+      .sensor-led {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(16, 185, 129, 0.9);
+        transition: 0.3s;
+      }
+
+      .sensor-led.attention {
+        background: #f59e0b;
+        box-shadow: 0 0 24px rgba(245, 158, 11, 0.95);
+        animation: ledBlink 0.8s infinite;
+      }
+
+      .sensor-led.danger {
+        background: #ef4444;
+        box-shadow:
+          0 0 26px rgba(239, 68, 68, 1),
+          0 0 70px rgba(239, 68, 68, 0.9);
+        animation: ledBlink 0.26s infinite;
+      }
+
+      .eco-sensor strong {
+        margin-top: 13px;
+        color: var(--blue-dark);
+        font-size: 14px;
+      }
+
+      .smoke-drag {
+        position: absolute;
+        left: 54px;
+        top: 170px;
+        width: 178px;
+        height: 178px;
+        cursor: grab;
+        filter: blur(7px);
+        mix-blend-mode: multiply;
+        animation: smokeFloat 4s ease-in-out infinite;
+        z-index: 3;
+        touch-action: none;
+      }
+
+      .smoke-drag:active {
+        cursor: grabbing;
+      }
+
+      .smoke-drag span {
+        position: absolute;
+        bottom: 22px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(72, 190, 155, 0.43) 0%,
+          rgba(90, 210, 180, 0.23) 45%,
+          transparent 77%
+        );
+        animation: smokeMove 5s ease-in-out infinite;
+      }
+
+      .smoke-drag span:nth-child(1) {
+        left: 8px;
+        animation-delay: 0s;
+      }
+      .smoke-drag span:nth-child(2) {
+        left: 34px;
+        animation-delay: 0.42s;
+      }
+      .smoke-drag span:nth-child(3) {
+        left: 64px;
+        animation-delay: 0.84s;
+      }
+      .smoke-drag span:nth-child(4) {
+        left: 96px;
+        animation-delay: 1.26s;
+      }
+      .smoke-drag span:nth-child(5) {
+        left: 18px;
+        animation-delay: 1.68s;
+      }
+      .smoke-drag span:nth-child(6) {
+        left: 52px;
+        animation-delay: 2.1s;
+      }
+      .smoke-drag span:nth-child(7) {
+        left: 82px;
+        animation-delay: 2.52s;
+      }
+      .smoke-drag span:nth-child(8) {
+        left: 44px;
+        animation-delay: 2.94s;
+      }
+      .smoke-drag span:nth-child(9) {
+        left: 108px;
+        animation-delay: 3.36s;
+      }
+      .smoke-drag span:nth-child(10) {
+        left: 72px;
+        animation-delay: 3.78s;
+      }
+      .smoke-drag span:nth-child(11) {
+        left: 24px;
+        animation-delay: 4.2s;
+      }
+      .smoke-drag span:nth-child(12) {
+        left: 118px;
+        animation-delay: 4.62s;
+      }
+
+      .stage-hint {
+        position: absolute;
+        left: 24px;
+        bottom: 22px;
+        z-index: 5;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(6, 59, 63, 0.72);
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 999px;
+        padding: 9px 14px;
+      }
+
+      @keyframes smokeMove {
+        0% {
+          opacity: 0;
+          transform: translateY(52px) translateX(0) scale(0.45);
+        }
+        25% {
+          opacity: 0.68;
+        }
+        50% {
+          opacity: 0.45;
+          transform: translateY(-26px) translateX(24px) scale(1.15);
+        }
+        75% {
+          opacity: 0.22;
+          transform: translateY(-82px) translateX(-18px) scale(1.65);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-138px) translateX(30px) scale(2.2);
+        }
+      }
+
+      @keyframes smokeFloat {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-2deg);
+        }
+        50% {
+          transform: translateY(-12px) rotate(2deg);
+        }
+      }
+
+      @keyframes ledBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.24;
+        }
+      }
+
+      @keyframes sensorDanger {
+        from {
+          transform: translateY(-50%) scale(1);
+        }
+        to {
+          transform: translateY(-50%) scale(1.04);
+        }
+      }
+
+      @keyframes simPulseBg {
+        from {
+          opacity: 0.22;
+        }
+        to {
+          opacity: 0.64;
+        }
+      }
+
+      @keyframes simShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+
+      @media (max-width: 950px) {
+        .simulation-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .simulation-stage {
+          min-height: 420px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .simulation-panel {
+          padding: 22px;
+        }
+
+        .eco-sensor {
+          right: 24px;
+          width: 132px;
+          height: 178px;
+        }
+
+        .eco-sensor::before {
+          width: 62px;
+          height: 62px;
+        }
+
+        .smoke-drag {
+          width: 145px;
+          height: 145px;
+        }
+      }
+
       /* PROTOTYPE */
       #prototipo {
         background: rgba(255, 255, 255, 0.25);
@@ -362,7 +871,11 @@
         border-radius: 22px;
         padding: 26px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
         text-align: center;
       }
       .prototype-card:hover {
@@ -411,7 +924,10 @@
         border-radius: 24px;
         padding: 28px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
-        transition: transform 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s;
         text-align: center;
       }
       .step:hover {
@@ -458,7 +974,11 @@
         border-radius: 22px;
         text-align: center;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
       }
       .feature:hover {
         transform: translateY(-8px);
@@ -480,6 +1000,61 @@
         line-height: 1.6;
       }
 
+      .prototype-card,
+      .step,
+      .feature,
+      .tech-card,
+      .team-card,
+      .showcase-box,
+      .hero-card,
+      .code-container {
+        position: relative;
+        isolation: isolate;
+      }
+
+      .prototype-card::after,
+      .step::after,
+      .feature::after,
+      .tech-card::after,
+      .team-card::after,
+      .showcase-box::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+          135deg,
+          rgba(14, 165, 233, 0.18),
+          rgba(16, 185, 129, 0.16)
+        );
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.45s ease;
+      }
+
+      .prototype-card:hover::after,
+      .step:hover::after,
+      .feature:hover::after,
+      .tech-card:hover::after,
+      .team-card:hover::after,
+      .showcase-box:hover::after {
+        opacity: 1;
+      }
+
+      .prototype-card:hover .prototype-icon,
+      .step:hover .step-icon,
+      .feature:hover .f-icon,
+      .tech-card:hover .tech-logo {
+        animation: iconFloat 0.75s ease both;
+      }
+
+      .showcase-box:hover,
+      .prototype-container:hover,
+      .code-container:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 45px rgba(14, 165, 233, 0.18);
+      }
+
       /* TECHNOLOGIES */
       #tecnologias {
         background: rgba(255, 255, 255, 0.2);
@@ -496,7 +1071,11 @@
         padding: 22px 18px;
         text-align: center;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
       }
       .tech-card:hover {
         transform: translateY(-5px);
@@ -532,7 +1111,10 @@
         padding: 28px 22px;
         text-align: center;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s;
       }
       .team-card:hover {
         transform: translateY(-6px);
@@ -675,7 +1257,11 @@
         font-size: 15px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.3s;
+        transition:
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.45s,
+          background 0.45s,
+          border-color 0.45s;
       }
       .btn-submit:hover {
         background: var(--blue-dark);
@@ -746,35 +1332,127 @@
       }
 
       /* ANIMATIONS */
+      @keyframes bgFlow {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
       @keyframes fadeUp {
         from {
           opacity: 0;
-          transform: translateY(30px);
+          transform: translateY(34px) scale(0.98);
+          filter: blur(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes fadeSoft {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
+
       @keyframes pulse {
         0%,
         100% {
           opacity: 1;
           transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
         }
         50% {
-          opacity: 0.6;
-          transform: scale(1.2);
+          opacity: 0.8;
+          transform: scale(1.15);
+          box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
         }
       }
+
+      @keyframes floatBlob {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(36px, -28px, 0) scale(1.08);
+        }
+      }
+
+      @keyframes iconFloat {
+        0% {
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+        45% {
+          transform: translateY(-8px) scale(1.08) rotate(-3deg);
+        }
+        100% {
+          transform: translateY(0) scale(1) rotate(0deg);
+        }
+      }
+
+      .hero-text {
+        animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .hero-text .badge,
+      .hero-text h1,
+      .hero-text p,
+      .hero-text .buttons {
+        animation: fadeSoft 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .hero-text .badge {
+        animation-delay: 0.05s;
+      }
+      .hero-text h1 {
+        animation-delay: 0.16s;
+      }
+      .hero-text p {
+        animation-delay: 0.28s;
+      }
+      .hero-text .buttons {
+        animation-delay: 0.4s;
+      }
+
       .reveal {
         opacity: 0;
-        transform: translateY(24px);
-        transition: all 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(34px) scale(0.985);
+        filter: blur(8px);
+        transition:
+          opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+          filter 0.85s ease;
+        transition-delay: var(--delay, 0ms);
+        will-change: opacity, transform, filter;
       }
+
       .reveal.visible {
         opacity: 1;
-        transform: none;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
       }
 
       /* RESPONSIVE */
@@ -797,10 +1475,9 @@
         .footer-inner {
           grid-template-columns: 1fr 1fr;
         }
-                .team-grid {
+        .team-grid {
           grid-template-columns: 2fr;
         }
-
       }
       @media (max-width: 680px) {
         nav {
@@ -842,7 +1519,6 @@
         .team-grid {
           grid-template-columns: 1fr;
         }
-
       }
 
       #codigo {
@@ -946,6 +1622,73 @@
         }
       }
 
+      /* IMPORTÂNCIA */
+
+      #importancia {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      .importance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+      }
+
+      .importance-card {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 28px;
+        text-align: center;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 30px rgba(14, 165, 233, 0.12);
+        transition: all 0.35s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .importance-card::before {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(
+          135deg,
+          rgba(14, 165, 233, 0.2),
+          rgba(16, 185, 129, 0.2)
+        );
+        border-radius: 50%;
+        top: -70px;
+        right: -70px;
+        transition: 0.4s;
+      }
+
+      .importance-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 18px 45px rgba(14, 165, 233, 0.18);
+      }
+
+      .importance-card:hover::before {
+        transform: scale(1.4);
+      }
+
+      .importance-icon {
+        font-size: 52px;
+        display: block;
+        margin-bottom: 18px;
+      }
+
+      .importance-card h3 {
+        color: var(--blue-dark);
+        margin-bottom: 12px;
+        font-size: 20px;
+      }
+
+      .importance-card p {
+        color: var(--text2);
+        line-height: 1.7;
+        font-size: 14px;
+      }
     </style>
   </head>
   <body>
@@ -954,6 +1697,7 @@
         <div class="logo">Eco <span>Smart</span></div>
         <nav>
           <a href="#inicio">Início</a>
+          <a href="#simulacao">Simulação</a>
           <a href="#prototipo">Protótipo e Código</a>
           <a href="#como-funciona">Como Funciona</a>
           <a href="#tecnologias">Tecnologias</a>
@@ -966,6 +1710,7 @@
 
       <nav class="mobile-nav" id="mobile-nav">
         <a href="#inicio" onclick="closeMobile()">Início</a>
+        <a href="#simulacao" onclick="closeMobile()">Simulação</a>
         <a href="#prototipo" onclick="closeMobile()">Protótipo</a>
         <a href="#como-funciona" onclick="closeMobile()">Como Funciona</a>
         <a href="#tecnologias" onclick="closeMobile()">Tecnologias</a>
@@ -988,6 +1733,140 @@
           </div>
         </div>
       </section>
+
+      <!-- IMPORTÂNCIA DO ECO SMART -->
+      <section id="importancia">
+        <div class="section-head reveal">
+          <span class="section-label">Importância</span>
+          <h2 class="section-title">Por que utilizar um detector de gás?</h2>
+          <p class="section-desc">
+            O Eco Smart foi desenvolvido para aumentar a segurança de pessoas,
+            proteger o meio ambiente e reduzir prejuízos causados por vazamentos
+            de gases.
+          </p>
+        </div>
+
+        <div class="importance-grid">
+          <div class="importance-card reveal">
+            <span class="importance-icon">🏠</span>
+            <h3>Segurança Residencial</h3>
+            <p>
+              Detecta vazamentos rapidamente, protegendo famílias contra
+              intoxicações, incêndios e explosões.
+            </p>
+          </div>
+
+          <div class="importance-card reveal">
+            <span class="importance-icon">🏢</span>
+            <h3>Segurança Empresarial</h3>
+            <p>
+              Ajuda a proteger funcionários, clientes e equipamentos, reduzindo
+              riscos operacionais.
+            </p>
+          </div>
+
+          <div class="importance-card reveal">
+            <span class="importance-icon">🌱</span>
+            <h3>Meio Ambiente</h3>
+            <p>
+              Identifica vazamentos que podem liberar gases nocivos,
+              contribuindo para a preservação ambiental.
+            </p>
+          </div>
+
+          <div class="importance-card reveal">
+            <span class="importance-icon">💰</span>
+            <h3>Custo-Benefício</h3>
+            <p>
+              Um pequeno investimento que pode evitar grandes prejuízos
+              financeiros e materiais.
+            </p>
+          </div>
+
+          <div class="importance-card reveal">
+            <span class="importance-icon">⚡</span>
+            <h3>Tecnologia Inteligente</h3>
+            <p>
+              Monitoramento contínuo com alertas rápidos para situações
+              potencialmente perigosas.
+            </p>
+          </div>
+
+          <div class="importance-card reveal">
+            <span class="importance-icon">🚨</span>
+            <h3>Prevenção de Acidentes</h3>
+            <p>
+              Atua antes que o problema se torne grave, aumentando a segurança
+              do ambiente.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIMULAÇÃO INTERATIVA -->
+      <section id="simulacao">
+        <div class="section-head reveal">
+          <span class="section-label">Interação</span>
+          <h2 class="section-title">Teste o sensor Eco Smart</h2>
+          <p class="section-desc">
+            Arraste a fumaça até o sensor e veja a simulação reagindo em tempo
+            real com níveis de segurança, luzes e alerta sonoro.
+          </p>
+        </div>
+
+        <div class="simulation-layout">
+          <div class="simulation-panel reveal">
+            <div class="level-card">
+              <div class="level-label">Nível atual</div>
+              <div class="level-name" id="simLevelName">Seguro</div>
+              <div class="meter">
+                <div class="meter-fill" id="simMeterFill"></div>
+              </div>
+            </div>
+
+            <div class="simulation-status" id="simStatus">
+              Ambiente seguro. Nenhum gás detectado.
+            </div>
+
+            <div class="risk-list">
+              <div class="risk-item">
+                <span class="risk-dot safe"></span>Seguro: fumaça longe do
+                sensor.
+              </div>
+              <div class="risk-item">
+                <span class="risk-dot attention"></span>Atenção: fumaça se
+                aproximando.
+              </div>
+              <div class="risk-item">
+                <span class="risk-dot danger"></span>Perigo: fumaça diretamente
+                no sensor.
+              </div>
+            </div>
+          </div>
+
+          <div class="simulation-stage reveal" id="simStage">
+            <div class="ambient-alert" id="simAmbient"></div>
+
+            <div
+              class="smoke-drag"
+              id="simSmoke"
+              aria-label="Fumaça arrastável"
+            >
+              <span></span><span></span><span></span><span></span><span></span
+              ><span></span> <span></span><span></span><span></span><span></span
+              ><span></span><span></span>
+            </div>
+
+            <div class="eco-sensor" id="simSensor">
+              <div class="sensor-led" id="simLed"></div>
+              <strong>Sensor MQ-2</strong>
+            </div>
+
+            <div class="stage-hint">Arraste a fumaça até o sensor</div>
+          </div>
+        </div>
+      </section>
+
       <!-- PROTÓTIPO -->
       <section id="prototipo">
         <div class="section-head reveal">
@@ -1044,11 +1923,13 @@
         </div>
 
         <div class="showcase">
-
           <div class="showcase-box reveal">
             <div class="code-header">🖼️ Protótipo do Circuito</div>
             <div class="prototype-content">
-              <a href="https://i.postimg.cc/NMhVXbHt/file-000000008350720ead66ac8b0acbbe88.png" target="_blank">
+              <a
+                href="https://i.postimg.cc/NMhVXbHt/file-000000008350720ead66ac8b0acbbe88.png"
+                target="_blank"
+              >
                 <img
                   src="https://i.postimg.cc/NMhVXbHt/file-000000008350720ead66ac8b0acbbe88.png"
                   alt="Protótipo Eco Smart"
@@ -1057,7 +1938,7 @@
               </a>
             </div>
           </div>
-                    <div class="showcase-box reveal">
+          <div class="showcase-box reveal">
             <div class="code-header">💻 Código Arduino — Eco Smart</div>
             <pre><code>
 // Código Arduino Eco Smart
@@ -1094,7 +1975,6 @@ void loop() {
 }
 </code></pre>
           </div>
-
         </div>
       </section>
 
@@ -1264,57 +2144,95 @@ void loop() {
             <div class="avatar av-blue">M</div>
             <h4>Márcio Yuri da Silva Pessoa</h4>
             <div class="role">Programador e Designer</div>
-            <p>Auxiliou na organização do projeto, no desenvolvimento das funcionalidades e na criação do design, contribuindo para o andamento das atividades e para a colaboração entre os integrantes da equipe.</p>
+            <p>
+              Auxiliou na organização do projeto, no desenvolvimento das
+              funcionalidades e na criação do design, contribuindo para o
+              andamento das atividades e para a colaboração entre os integrantes
+              da equipe.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-blue">M</div>
             <h4>Eduardo Meneses Marreiro</h4>
             <div class="role">Desenvolvedor do Protótipo e do Código</div>
-            <p>Responsável pela montagem do protótipo e pelo desenvolvimento da programação do projeto, contribuindo para a integração entre os componentes físicos e o funcionamento do sistema.</p>
+            <p>
+              Responsável pela montagem do protótipo e pelo desenvolvimento da
+              programação do projeto, contribuindo para a integração entre os
+              componentes físicos e o funcionamento do sistema.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-teal">C</div>
             <h4>Cherliane Alves da Silva</h4>
             <div class="role">Organização Geral</div>
-            <p>Responsável por auxiliar na organização das atividades, no acompanhamento das etapas do projeto e na coordenação dos materiais e informações necessários para o desenvolvimento da equipe.</p>
+            <p>
+              Responsável por auxiliar na organização das atividades, no
+              acompanhamento das etapas do projeto e na coordenação dos
+              materiais e informações necessários para o desenvolvimento da
+              equipe.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-teal">J</div>
             <h4>Jhon Ikaro Gomes da Rocha</h4>
             <div class="role">Produção do Banner</div>
-            <p>Contribuiu com a elaboração e organização do banner utilizado na apresentação do projeto.</p>
+            <p>
+              Contribuiu com a elaboração e organização do banner utilizado na
+              apresentação do projeto.
+            </p>
           </div>
 
           <div class="team-card reveal">
             <div class="avatar av-teal">A</div>
             <h4>Adrian Gabriel Marinho da Silva</h4>
             <div class="role">Secretário do Projeto</div>
-            <p>Responsável pelo registro de informações, organização de documentos e acompanhamento das atividades realizadas durante o desenvolvimento do projeto, auxiliando na comunicação e na organização da equipe.</p>
+            <p>
+              Responsável pelo registro de informações, organização de
+              documentos e acompanhamento das atividades realizadas durante o
+              desenvolvimento do projeto, auxiliando na comunicação e na
+              organização da equipe.
+            </p>
           </div>
 
           <div class="team-card reveal">
             <div class="avatar av-purple">J</div>
             <h4>José Wesley Sousa de Andrade</h4>
             <div class="role">Organização da Apresentação</div>
-            <p>Participou da divisão das falas e da organização da apresentação do projeto, auxiliando na distribuição dos conteúdos entre os integrantes da equipe.</p>
+            <p>
+              Participou da divisão das falas e da organização da apresentação
+              do projeto, auxiliando na distribuição dos conteúdos entre os
+              integrantes da equipe.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-purple">V</div>
             <h4>Victor Valdisio de Souza Vitor</h4>
             <div class="role">Idealização e Desenvolvimento do Site</div>
-            <p>Contribuiu com a proposta inicial do projeto e participou do desenvolvimento do site, auxiliando na construção e organização da plataforma.</p>
+            <p>
+              Contribuiu com a proposta inicial do projeto e participou do
+              desenvolvimento do site, auxiliando na construção e organização da
+              plataforma.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-purple">I</div>
             <h4>Isabelly de Moura Lessa vieira</h4>
             <div class="role">Pesquisa e Levantamento de Informações</div>
-            <p>Responsável pela pesquisa e coleta das informações utilizadas no projeto, contribuindo para a fundamentação do conteúdo e desenvolvimento das atividades.</p>
+            <p>
+              Responsável pela pesquisa e coleta das informações utilizadas no
+              projeto, contribuindo para a fundamentação do conteúdo e
+              desenvolvimento das atividades.
+            </p>
           </div>
           <div class="team-card reveal">
             <div class="avatar av-purple">L</div>
             <h4>Lavínia Soares Diniz De Sousa</h4>
             <div class="role">Design do Banner</div>
-            <p>Responsável pela organização e desenvolvimento visual do banner do projeto, contribuindo para a apresentação das informações de forma clara e atrativa.</p>
+            <p>
+              Responsável pela organização e desenvolvimento visual do banner do
+              projeto, contribuindo para a apresentação das informações de forma
+              clara e atrativa.
+            </p>
           </div>
         </div>
       </section>
@@ -1343,7 +2261,6 @@ void loop() {
           <a href="#equipe">Nossa Equipe</a>
           <a href="#inicio">Documentação</a>
           <a href="#projeto">Esquemático</a>
-          <a href="">Formulario</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -1365,16 +2282,208 @@ void loop() {
         mobileNav.classList.remove("open");
       }
 
-      // SCROLL REVEAL
+      // SCROLL REVEAL COM DELAY EM CASCATA
+      const revealItems = document.querySelectorAll(".reveal");
+
+      revealItems.forEach((el, index) => {
+        const delay = Math.min((index % 6) * 90, 450);
+        el.style.setProperty("--delay", `${delay}ms`);
+      });
+
       const obs = new IntersectionObserver(
         (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              obs.unobserve(entry.target);
+            }
           });
         },
-        { threshold: 0.12 },
+        {
+          threshold: 0.14,
+          rootMargin: "0px 0px -60px 0px",
+        },
       );
-      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      revealItems.forEach((el) => obs.observe(el));
+
+      // SIMULAÇÃO INTERATIVA DO SENSOR
+      const simSmoke = document.getElementById("simSmoke");
+      const simStage = document.getElementById("simStage");
+      const simSensor = document.getElementById("simSensor");
+      const simLed = document.getElementById("simLed");
+      const simStatus = document.getElementById("simStatus");
+      const simAmbient = document.getElementById("simAmbient");
+      const simLevelName = document.getElementById("simLevelName");
+      const simMeterFill = document.getElementById("simMeterFill");
+
+      let simDragging = false;
+      let simOffsetX = 0;
+      let simOffsetY = 0;
+      let simBeepAllowed = true;
+
+      if (simSmoke && simStage && simSensor) {
+        simSmoke.addEventListener("mousedown", startSimDrag);
+        document.addEventListener("mouseup", stopSimDrag);
+        document.addEventListener("mousemove", moveSimSmoke);
+
+        simSmoke.addEventListener("touchstart", startSimDrag, {
+          passive: false,
+        });
+        document.addEventListener("touchend", stopSimDrag);
+        document.addEventListener("touchmove", moveSimSmoke, {
+          passive: false,
+        });
+      }
+
+      function getSimPointer(e) {
+        if (e.touches) {
+          return {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY,
+          };
+        }
+
+        return {
+          x: e.clientX,
+          y: e.clientY,
+        };
+      }
+
+      function startSimDrag(e) {
+        e.preventDefault();
+        simDragging = true;
+
+        const pointer = getSimPointer(e);
+        const smokeRect = simSmoke.getBoundingClientRect();
+
+        simOffsetX = pointer.x - smokeRect.left;
+        simOffsetY = pointer.y - smokeRect.top;
+      }
+
+      function stopSimDrag() {
+        simDragging = false;
+      }
+
+      function moveSimSmoke(e) {
+        if (!simDragging) return;
+        e.preventDefault();
+
+        const pointer = getSimPointer(e);
+        const stageRect = simStage.getBoundingClientRect();
+
+        let x = pointer.x - stageRect.left - simOffsetX;
+        let y = pointer.y - stageRect.top - simOffsetY;
+
+        x = Math.max(
+          0,
+          Math.min(x, simStage.offsetWidth - simSmoke.offsetWidth),
+        );
+        y = Math.max(
+          0,
+          Math.min(y, simStage.offsetHeight - simSmoke.offsetHeight),
+        );
+
+        simSmoke.style.left = x + "px";
+        simSmoke.style.top = y + "px";
+
+        checkSimDetection();
+      }
+
+      function checkSimDetection() {
+        const smokeRect = simSmoke.getBoundingClientRect();
+        const sensorRect = simSensor.getBoundingClientRect();
+
+        const smokeCenterX = smokeRect.left + smokeRect.width / 2;
+        const smokeCenterY = smokeRect.top + smokeRect.height / 2;
+        const sensorCenterX = sensorRect.left + sensorRect.width / 2;
+        const sensorCenterY = sensorRect.top + sensorRect.height / 2;
+
+        const distance = Math.sqrt(
+          Math.pow(smokeCenterX - sensorCenterX, 2) +
+            Math.pow(smokeCenterY - sensorCenterY, 2),
+        );
+
+        if (distance < 90) {
+          setSimDanger();
+        } else if (distance < 190) {
+          setSimAttention();
+        } else {
+          setSimSafe();
+        }
+      }
+
+      function clearSimStates() {
+        simSensor.classList.remove("attention", "danger");
+        simLed.classList.remove("attention", "danger");
+        simStatus.classList.remove("attention", "danger");
+        simAmbient.classList.remove("attention", "danger");
+      }
+
+      function setSimSafe() {
+        clearSimStates();
+        simLevelName.textContent = "Seguro";
+        simLevelName.style.color = "var(--green)";
+        simMeterFill.style.width = "16%";
+        simMeterFill.style.background = "var(--green)";
+        simStatus.textContent = "Ambiente seguro. Nenhum gás detectado.";
+      }
+
+      function setSimAttention() {
+        clearSimStates();
+        simSensor.classList.add("attention");
+        simLed.classList.add("attention");
+        simStatus.classList.add("attention");
+        simAmbient.classList.add("attention");
+        simLevelName.textContent = "Atenção";
+        simLevelName.style.color = "#d97706";
+        simMeterFill.style.width = "58%";
+        simMeterFill.style.background = "#f59e0b";
+        simStatus.textContent =
+          "⚠️ Atenção: presença de gás próxima ao sensor.";
+      }
+
+      function setSimDanger() {
+        clearSimStates();
+        simSensor.classList.add("danger");
+        simLed.classList.add("danger");
+        simStatus.classList.add("danger");
+        simAmbient.classList.add("danger");
+        simLevelName.textContent = "Perigo";
+        simLevelName.style.color = "#ef4444";
+        simMeterFill.style.width = "100%";
+        simMeterFill.style.background = "#ef4444";
+        simStatus.textContent =
+          "🚨 Perigo! Gás detectado diretamente no sensor.";
+
+        if (simBeepAllowed) {
+          playSimBeep();
+          simBeepAllowed = false;
+
+          setTimeout(() => {
+            simBeepAllowed = true;
+          }, 750);
+        }
+      }
+
+      function playSimBeep() {
+        const audioContext = new AudioContext();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 920;
+        gainNode.gain.value = 0.075;
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        oscillator.start();
+
+        setTimeout(() => {
+          oscillator.stop();
+          audioContext.close();
+        }, 170);
+      }
 
       // CONTACT FORM
       function submitForm(e) {

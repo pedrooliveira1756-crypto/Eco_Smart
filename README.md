@@ -162,6 +162,6 @@ Monitoramento remoto via internet
 🌱 Eco Smart
 Tecnologia, Segurança e Sustentabilidade
 
-Desenvolvido por Pedro Tiago Oliveira da Costa e Equipe
+Desenvolvido por Pedro Tiago Oliveira da Costa
 
 </div>
